@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<INDEX html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -350,7 +350,8 @@
  *    texto
  *    Automatización de procesos
  *    ...
-  */
+ * ─────────────────────────────────────────────────────────────
+ */
 const SHEETS = {
   kpi_mesa:       'https://docs.google.com/spreadsheets/d/e/2PACX-1vTfF1wd45qUopayjx-Pytz983E-7GEQG2xDw2Z5sUdAsoniDfcubr1D77KfmY7ofXHCxYr3GTpFG6Hm/pub?output=csv&gid=908786248',
   disponibilidad: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTfF1wd45qUopayjx-Pytz983E-7GEQG2xDw2Z5sUdAsoniDfcubr1D77KfmY7ofXHCxYr3GTpFG6Hm/pub?output=csv&gid=1304805929',
@@ -362,6 +363,8 @@ const SHEETS = {
   riesgos:        'https://docs.google.com/spreadsheets/d/e/2PACX-1vTfF1wd45qUopayjx-Pytz983E-7GEQG2xDw2Z5sUdAsoniDfcubr1D77KfmY7ofXHCxYr3GTpFG6Hm/pub?output=csv&gid=1971345671',
   oportunidades:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vTfF1wd45qUopayjx-Pytz983E-7GEQG2xDw2Z5sUdAsoniDfcubr1D77KfmY7ofXHCxYr3GTpFG6Hm/pub?output=csv&gid=218069570',
 };
+
+/* ── Datos de fallback (hardcoded) ──────────────────────── */
 const FALLBACK = {
   kpi_mesa: [
     ['indicador','valor'],
@@ -619,3 +622,4 @@ init();
 </script>
 </body>
 </html>
+
