@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerencia de Sistemas – Dashboard H1 2026</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.11.0/dist/tabler-icons.min.css">
+<style>
+  :root {
+    --bg: #f8f8f6;
+    --surface: #ffffff;
+    --surface2: #f1f0eb;
+    --border: rgba(0,0,0,0.10);
+    --text: #1a1a18;
+    --text2: #6b6b66;
+    --text3: #9b9b96;
+    --green: #1D9E75;
+    --green-bg: #E1F5EE;
+    --green-text: #0F6E56;
+    --blue: #185FA5;
+    --blue-bg: #E6F1FB;
+    --blue-text: #185FA5;
+    --purple: #534AB7;
+    --amber: #EF9F27;
+    --gray-dot: #B4B2A9;
+    --teal: #5DCAA5;
+    --red-bg: #FCEBEB;
+    --red-text: #A32D2D;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1a18;
+      --surface: #242422;
+      --surface2: #2c2c2a;
+      --border: rgba(255,255,255,0.10);
+      --text: #f1f0eb;
+      --text2: #b4b2a9;
+      --text3: #6b6b66;
+      --green-bg: #04342C;
+      --green-text: #9FE1CB;
+      --blue-bg: #042C53;
+      --blue-text: #B5D4F4;
+      --red-bg: #501313;
+      --red-text: #F7C1C1;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  /* Header */
+  .header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 0.5px solid var(--border); }
+  .header-title { font-size: 20px; font-weight: 500; color: var(--text); }
+  .header-sub { font-size: 13px; color: var(--text2); margin-top: 4px; }
+  .badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: flex-start; }
+  .badge { font-size: 11px; font-weight: 500; padding: 4px 10px; border-radius: var(--radius); background: var(--surface2); color: var(--text2); border: 0.5px solid var(--border); display: flex; align-items: center; gap: 5px; }
+
+  /* Section label */
+  .section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text3); margin: 2rem 0 0.75rem; }
+
+  /* KPI grid */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+  .kpi { background: var(--surface2); border-radius: var(--radius); padding: 14px 16px; }
+  .kpi-label { font-size: 11px; color: var(--text2); margin-bottom: 6px; }
+  .kpi-value { font-size: 24px; font-weight: 500; color: var(--text); line-height: 1; }
+  .kpi-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+  .kpi.green .kpi-value { color: var(--green); }
+  .kpi.blue .kpi-value { color: var(--blue); }
+
+  /* Two column */
+  .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+  .three-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+
+  /* Card */
+  .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; }
+  .card-title { font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+  .card-title i { font-size: 15px; }
+
+  /* Availability bars */
+  .avail-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .avail-label { font-size: 12px; color: var(--text2); width: 140px; flex-shrink: 0; }
+  .avail-bar-wrap { flex: 1; height: 6px; border-radius: 3px; background: var(--surface2); overflow: hidden; }
+  .avail-bar { height: 100%; border-radius: 3px; background: var(--green); }
+  .avail-pct { font-size: 12px; font-weight: 500; color: var(--text); width: 40px; text-align: right; flex-shrink: 0; }
+  .avail-meta { display: flex; gap: 20px; margin-top: 12px; padding-top: 12px; border-top: 0.5px solid var(--border); }
+  .avail-meta-item p:first-child { font-size: 10px; color: var(--text3); }
+  .avail-meta-item p:last-child { font-size: 18px; font-weight: 500; color: var(--text); }
+
+  /* Distribution bars */
+  .dist-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .dist-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dist-label { font-size: 12px; color: var(--text2); flex: 1; }
+  .dist-bar-wrap { width: 80px; height: 5px; border-radius: 3px; background: var(--surface2); overflow: hidden; }
+  .dist-bar { height: 100%; border-radius: 3px; }
+  .dist-pct { font-size: 12px; font-weight: 500; color: var(--text); width: 32px; text-align: right; }
+  .dist-stack { height: 8px; border-radius: 4px; overflow: hidden; display: flex; margin-top: 10px; }
+
+  /* Inventory */
+  .inv-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .inv-item { text-align: center; padding: 12px 6px; border-radius: var(--radius); background: var(--surface2); }
+  .inv-num { font-size: 22px; font-weight: 500; color: var(--text); }
+  .inv-lbl { font-size: 10px; color: var(--text2); margin-top: 3px; }
+
+  /* Projects */
+  .proj-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .proj-name { font-size: 12px; color: var(--text); width: 150px; flex-shrink: 0; }
+  .proj-bar-wrap { flex: 1; height: 8px; border-radius: 4px; background: var(--surface2); overflow: hidden; }
+  .proj-bar { height: 100%; border-radius: 4px; }
+  .proj-pct { font-size: 12px; font-weight: 500; color: var(--text); width: 36px; text-align: right; }
+  .proj-badge { font-size: 10px; padding: 3px 8px; border-radius: var(--radius); width: 76px; text-align: center; flex-shrink: 0; }
+  .badge-done { background: var(--green-bg); color: var(--green-text); }
+  .badge-wip { background: var(--blue-bg); color: var(--blue-text); }
+
+  /* Security */
+  .sec-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .sec-item { padding: 10px 12px; border-radius: var(--radius); background: var(--surface2); display: flex; align-items: center; gap: 10px; }
+  .sec-icon { font-size: 18px; color: var(--green); }
+  .sec-val { font-size: 15px; font-weight: 500; color: var(--text); }
+  .sec-lbl { font-size: 10px; color: var(--text2); }
+
+  /* Tags */
+  .risk-tag { font-size: 11px; color: var(--text2); padding: 4px 9px; border-radius: var(--radius); background: var(--surface2); margin: 3px 2px; display: inline-block; line-height: 1.4; border: 0.5px solid var(--border); }
+  .op-tag { font-size: 11px; color: var(--green-text); background: var(--green-bg); padding: 4px 9px; border-radius: var(--radius); margin: 3px 2px; display: inline-block; line-height: 1.4; }
+
+  /* Objectives */
+  .obj-list { list-style: none; }
+  .obj-list li { font-size: 12px; color: var(--text2); padding: 6px 0; border-bottom: 0.5px solid var(--border); display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
+  .obj-list li:last-child { border-bottom: none; }
+  .obj-num { font-size: 10px; font-weight: 600; color: var(--blue-text); background: var(--blue-bg); width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+
+  /* Alert note */
+  .alert-note { font-size: 12px; color: var(--red-text); background: var(--red-bg); border-radius: var(--radius); padding: 8px 12px; margin-top: 1.5rem; display: flex; align-items: center; gap: 7px; border: 0.5px solid rgba(163,45,45,0.2); }
+
+  /* Loading / error */
+  .loader { text-align: center; padding: 2rem; color: var(--text3); font-size: 13px; }
+  .error-note { font-size: 12px; color: var(--red-text); background: var(--red-bg); border-radius: var(--radius); padding: 8px 12px; margin-bottom: 1rem; display: none; }
+
+  /* Footer */
+  .footer { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 0.5px solid var(--border); font-size: 11px; color: var(--text3); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+  .dot-sep::before { content: '·'; margin: 0 6px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── HEADER ─────────────────────────────────────────── -->
+  <div class="header">
+    <div>
+      <p class="header-title">Gerencia de Sistemas e Ingreso de Datos</p>
+      <p class="header-sub">Reporte de Gestión · Enero – Junio 2026</p>
+    </div>
+    <div class="badges">
+      <span class="badge"><i class="ti ti-users"></i> Dotación: 4</span>
+      <span class="badge"><i class="ti ti-calendar"></i> H1 2026</span>
+      <span class="badge" id="last-update"><i class="ti ti-refresh"></i> Cargando…</span>
+    </div>
+  </div>
+
+  <div class="error-note" id="error-note">
+    <i class="ti ti-alert-circle"></i>
+    <span id="error-msg">No se pudo cargar datos del Google Sheet. Se muestran los datos de ejemplo.</span>
+  </div>
+
+  <!-- ── KPIs MESA DE AYUDA ──────────────────────────────── -->
+  <p class="section-label">Mesa de ayuda</p>
+  <div class="kpi-grid" id="kpi-grid">
+    <div class="kpi green">
+      <p class="kpi-label">Tickets recibidos</p>
+      <p class="kpi-value" id="kpi-recibidos">480</p>
+      <p class="kpi-sub">ene – jun 2026</p>
+    </div>
+    <div class="kpi green">
+      <p class="kpi-label">% resolución</p>
+      <p class="kpi-value" id="kpi-resolucion">96,9%</p>
+      <p class="kpi-sub" id="kpi-resueltos-sub">465 resueltos</p>
+    </div>
+    <div class="kpi">
+      <p class="kpi-label">T° respuesta prom.</p>
+      <p class="kpi-value" id="kpi-respuesta">2 h</p>
+      <p class="kpi-sub">promedio</p>
+    </div>
+    <div class="kpi">
+      <p class="kpi-label">T° resolución prom.</p>
+      <p class="kpi-value" id="kpi-resol-tiempo">8 h</p>
+      <p class="kpi-sub">promedio</p>
+    </div>
+    <div class="kpi green">
+      <p class="kpi-label">Satisfacción</p>
+      <p class="kpi-value" id="kpi-satisfaccion">92%</p>
+      <p class="kpi-sub">usuarios</p>
+    </div>
+  </div>
+
+  <!-- ── DISPONIBILIDAD + DISTRIBUCIÓN ─────────────────── -->
+  <p class="section-label">Disponibilidad de servicios · Distribución de incidentes</p>
+  <div class="two-col">
+
+    <div class="card">
+      <p class="card-title"><i class="ti ti-server"></i> Disponibilidad</p>
+      <div id="avail-rows">
+        <!-- poblado por JS -->
+      </div>
+      <div class="avail-meta">
+        <div class="avail-meta-item">
+          <p>Incidentes críticos</p>
+          <p id="meta-incidentes">2</p>
+        </div>
+        <div class="avail-meta-item">
+          <p>Indisponibilidad total</p>
+          <p id="meta-indisp">3 h</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-title"><i class="ti ti-chart-pie"></i> Distribución de incidentes</p>
+      <div id="dist-rows">
+        <!-- poblado por JS -->
+      </div>
+      <div class="dist-stack" id="dist-stack"></div>
+    </div>
+  </div>
+
+  <!-- ── INVENTARIO ─────────────────────────────────────── -->
+  <p class="section-label">Infraestructura administrada</p>
+  <div class="card">
+    <div class="inv-grid" id="inv-grid">
+      <!-- poblado por JS -->
+    </div>
+  </div>
+
+  <!-- ── PROYECTOS + SEGURIDAD ──────────────────────────── -->
+  <p class="section-label">Proyectos · Seguridad de la información</p>
+  <div class="two-col">
+
+    <div class="card">
+      <p class="card-title"><i class="ti ti-rocket"></i> Estado de proyectos</p>
+      <div id="proj-rows">
+        <!-- poblado por JS -->
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-title"><i class="ti ti-shield-check"></i> Seguridad</p>
+      <div class="sec-grid" id="sec-grid">
+        <!-- poblado por JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ── OBJETIVOS / RIESGOS / OPORTUNIDADES ───────────── -->
+  <p class="section-label">Objetivos · Riesgos · Oportunidades</p>
+  <div class="three-col">
+
+    <div class="card">
+      <p class="card-title"><i class="ti ti-target"></i> Próximo período</p>
+      <ul class="obj-list" id="obj-list">
+        <!-- poblado por JS -->
+      </ul>
+    </div>
+
+    <div class="card">
+      <p class="card-title"><i class="ti ti-alert-circle"></i> Riesgos</p>
+      <div id="risk-tags"><!-- poblado por JS --></div>
+    </div>
+
+    <div class="card">
+      <p class="card-title"><i class="ti ti-bulb"></i> Oportunidades</p>
+      <div id="op-tags"><!-- poblado por JS --></div>
+    </div>
+  </div>
+
+  <div class="alert-note">
+    <i class="ti ti-info-circle"></i>
+    Pendiente: nombramiento de ISO / Deputy ISO
+  </div>
+
+  <div class="footer">
+    <span>Gerencia de Sistemas e Ingreso de Datos</span>
+    <span>
+      Datos: Google Sheets
+      <span class="dot-sep">Actualizado: <span id="footer-date">—</span></span>
+    </span>
+  </div>
+
+</div>
+
+<script>
+/*
+ * ─────────────────────────────────────────────────────────────
+ *  CONFIGURACIÓN — editá estas URLs con tu Google Sheet
+ *
+ *  Cómo obtener la URL de cada hoja:
+ *  1. Abrí tu Google Sheet
+ *  2. Archivo → Compartir → Publicar en la web
+ *  3. Elegí la hoja (pestaña) y el formato CSV
+ *  4. Copiá la URL y pegala abajo
+ *
+ *  Estructura esperada de cada hoja:
+ *
+ *  hoja "kpi_mesa":
+ *    indicador        | valor
+ *    tickets_recibidos| 480
+ *    tickets_resueltos| 465
+ *    pct_resolucion   | 96.9%
+ *    tiempo_respuesta | 2 h
+ *    tiempo_resolucion| 8 h
+ *    satisfaccion     | 92%
+ *
+ *  hoja "disponibilidad":
+ *    servicio         | pct
+ *    Correo electrónico| 99.8
+ *    ERP / Sistema    | 99.5
+ *    ...
+ *
+ *  hoja "distribucion":
+ *    tipo             | pct    | color
+ *    Software         | 35     | #534AB7
+ *    ...
+ *
+ *  hoja "inventario":
+ *    recurso          | cantidad
+ *    PCs y notebooks  | 85
+ *    ...
+ *
+ *  hoja "proyectos":
+ *    nombre           | estado      | avance
+ *    Renovación de PCs| Finalizado  | 100
+ *    ...
+ *
+ *  hoja "seguridad":
+ *    indicador        | valor       | icono
+ *    Antivirus actualiz| 100%       | ti-circle-check
+ *    ...
+ *
+ *  hoja "objetivos":
+ *    texto
+ *    Mantener disponibilidad > 99%
+ *    ...
+ *
+ *  hoja "riesgos":
+ *    texto
+ *    Obsolescencia de equipos
+ *    ...
+ *
+ *  hoja "oportunidades":
+ *    texto
+ *    Automatización de procesos
+ *    ...
+ * ─────────────────────────────────────────────────────────────
+ */
+const SHEETS = {
+  kpi_mesa:       '',  // URL CSV hoja kpi_mesa
+  disponibilidad: '',  // URL CSV hoja disponibilidad
+  distribucion:   '',  // URL CSV hoja distribucion
+  inventario:     '',  // URL CSV hoja inventario
+  proyectos:      '',  // URL CSV hoja proyectos
+  seguridad:      '',  // URL CSV hoja seguridad
+  objetivos:      '',  // URL CSV hoja objetivos
+  riesgos:        '',  // URL CSV hoja riesgos
+  oportunidades:  '',  // URL CSV hoja oportunidades
+};
+
+/* ── Datos de fallback (hardcoded) ──────────────────────── */
+const FALLBACK = {
+  kpi_mesa: [
+    ['indicador','valor'],
+    ['tickets_recibidos','480'],
+    ['tickets_resueltos','465'],
+    ['pct_resolucion','96,9%'],
+    ['tiempo_respuesta','2 h'],
+    ['tiempo_resolucion','8 h'],
+    ['satisfaccion','92%'],
+  ],
+  disponibilidad: [
+    ['servicio','pct'],
+    ['Correo electrónico','99.8'],
+    ['ERP / Sistema de Gestión','99.5'],
+    ['Internet Corporativa','99.7'],
+    ['Telefonía IP','99.9'],
+    ['Servidores','99.6'],
+  ],
+  distribucion: [
+    ['tipo','pct','color'],
+    ['Software','35','#534AB7'],
+    ['Accesos y permisos','25','#185FA5'],
+    ['Hardware','20','#5DCAA5'],
+    ['Redes y comunicaciones','15','#EF9F27'],
+    ['Otros','5','#B4B2A9'],
+  ],
+  inventario: [
+    ['recurso','cantidad'],
+    ['PCs y notebooks','85'],
+    ['Impresoras','12'],
+    ['Servidores físicos','2'],
+    ['Servidores virtuales','10'],
+    ['Switches','8'],
+    ['Equipos de red','15'],
+  ],
+  proyectos: [
+    ['nombre','estado','avance'],
+    ['Renovación de PCs','Finalizado','100'],
+    ['Implementación MFA','Finalizado','100'],
+    ['Migración a nube','En ejecución','70'],
+    ['Actualización de red','En ejecución','60'],
+  ],
+  seguridad: [
+    ['indicador','valor','icono'],
+    ['Antivirus actualizado','100%','ti-circle-check'],
+    ['Respaldos exitosos','99,8%','ti-database'],
+    ['Usuarios revisados','100%','ti-user-check'],
+    ['Incidentes críticos','0','ti-alert-triangle'],
+  ],
+  objetivos: [
+    ['texto'],
+    ['Mantener disponibilidad > 99%'],
+    ['Reducir 10% tiempos de resolución'],
+    ['Completar renovación tecnológica'],
+    ['Fortalecer controles de ciberseguridad'],
+    ['Mejorar satisfacción de usuarios'],
+  ],
+  riesgos: [
+    ['texto'],
+    ['Obsolescencia de equipos'],
+    ['Dependencia de proveedores externos'],
+    ['Incremento de amenazas cibernéticas'],
+  ],
+  oportunidades: [
+    ['texto'],
+    ['Automatización de procesos'],
+    ['Mayor adopción cloud'],
+    ['Capacitación en ciberseguridad'],
+  ],
+};
+
+/* ── CSV parser ─────────────────────────────────────────── */
+function parseCSV(text) {
+  return text.trim().split('\n').map(row =>
+    row.split(',').map(c => c.trim().replace(/^"|"$/g, ''))
+  );
+}
+
+/* ── Fetch con fallback ─────────────────────────────────── */
+async function getData(key) {
+  const url = SHEETS[key];
+  if (!url) return FALLBACK[key];
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    return parseCSV(text);
+  } catch {
+    return FALLBACK[key];
+  }
+}
+
+/* ── Porcentaje como número ─────────────────────────────── */
+function pctNum(s) {
+  return parseFloat(String(s).replace('%','').replace(',','.'));
+}
+
+/* ── Render functions ───────────────────────────────────── */
+function renderKPI(rows) {
+  const map = {};
+  rows.slice(1).forEach(r => { map[r[0]] = r[1]; });
+  const recibidos = map['tickets_recibidos'] || '—';
+  const resueltos = map['tickets_resueltos'] || '—';
+  const pct = map['pct_resolucion'] || '—';
+  const resp = map['tiempo_respuesta'] || '—';
+  const resol = map['tiempo_resolucion'] || '—';
+  const satis = map['satisfaccion'] || '—';
+  document.getElementById('kpi-recibidos').textContent = recibidos;
+  document.getElementById('kpi-resolucion').textContent = pct;
+  document.getElementById('kpi-resueltos-sub').textContent = resueltos + ' resueltos';
+  document.getElementById('kpi-respuesta').textContent = resp;
+  document.getElementById('kpi-resol-tiempo').textContent = resol;
+  document.getElementById('kpi-satisfaccion').textContent = satis;
+}
+
+function renderAvail(rows) {
+  const container = document.getElementById('avail-rows');
+  container.innerHTML = '';
+  rows.slice(1).forEach(r => {
+    const [servicio, pct] = r;
+    const num = pctNum(pct);
+    const minPct = 98;
+    const barW = Math.max(0, Math.min(100, ((num - minPct) / (100 - minPct)) * 100));
+    container.innerHTML += `
+      <div class="avail-row">
+        <span class="avail-label">${servicio}</span>
+        <div class="avail-bar-wrap"><div class="avail-bar" style="width:${barW}%"></div></div>
+        <span class="avail-pct">${num.toFixed(1).replace('.',',')}%</span>
+      </div>`;
+  });
+}
+
+function renderDist(rows) {
+  const container = document.getElementById('dist-rows');
+  const stack = document.getElementById('dist-stack');
+  container.innerHTML = '';
+  stack.innerHTML = '';
+  rows.slice(1).forEach(r => {
+    const [tipo, pct, color] = r;
+    const num = pctNum(pct);
+    container.innerHTML += `
+      <div class="dist-row">
+        <span class="dist-dot" style="background:${color};"></span>
+        <span class="dist-label">${tipo}</span>
+        <div class="dist-bar-wrap"><div class="dist-bar" style="width:${num}%;background:${color};"></div></div>
+        <span class="dist-pct">${num}%</span>
+      </div>`;
+    stack.innerHTML += `<div style="width:${num}%;background:${color};"></div>`;
+  });
+}
+
+function renderInv(rows) {
+  const container = document.getElementById('inv-grid');
+  container.innerHTML = '';
+  rows.slice(1).forEach(r => {
+    const [recurso, cantidad] = r;
+    container.innerHTML += `
+      <div class="inv-item">
+        <p class="inv-num">${cantidad}</p>
+        <p class="inv-lbl">${recurso}</p>
+      </div>`;
+  });
+}
+
+function renderProj(rows) {
+  const container = document.getElementById('proj-rows');
+  container.innerHTML = '';
+  rows.slice(1).forEach(r => {
+    const [nombre, estado, avance] = r;
+    const num = parseInt(avance, 10);
+    const done = estado.toLowerCase().includes('finaliz');
+    const barColor = done ? '#1D9E75' : '#378ADD';
+    const badgeClass = done ? 'badge-done' : 'badge-wip';
+    container.innerHTML += `
+      <div class="proj-row">
+        <span class="proj-name">${nombre}</span>
+        <div class="proj-bar-wrap"><div class="proj-bar" style="width:${num}%;background:${barColor};"></div></div>
+        <span class="proj-pct">${num}%</span>
+        <span class="proj-badge ${badgeClass}">${estado}</span>
+      </div>`;
+  });
+}
+
+function renderSec(rows) {
+  const container = document.getElementById('sec-grid');
+  container.innerHTML = '';
+  rows.slice(1).forEach(r => {
+    const [indicador, valor, icono] = r;
+    container.innerHTML += `
+      <div class="sec-item">
+        <i class="ti ${icono} sec-icon"></i>
+        <div>
+          <p class="sec-val">${valor}</p>
+          <p class="sec-lbl">${indicador}</p>
+        </div>
+      </div>`;
+  });
+}
+
+function renderObj(rows) {
+  const container = document.getElementById('obj-list');
+  container.innerHTML = '';
+  rows.slice(1).forEach((r, i) => {
+    container.innerHTML += `
+      <li><span class="obj-num">${i + 1}</span>${r[0]}</li>`;
+  });
+}
+
+function renderTags(rows, containerId, cls) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  rows.slice(1).forEach(r => {
+    container.innerHTML += `<span class="${cls}">${r[0]}</span>`;
+  });
+}
+
+/* ── Main ───────────────────────────────────────────────── */
+async function init() {
+  const usingSheets = Object.values(SHEETS).some(u => u !== '');
+  if (!usingSheets) {
+    document.getElementById('error-note').style.display = 'flex';
+    document.getElementById('error-msg').textContent =
+      'URLs de Google Sheets no configuradas. Mostrando datos de ejemplo.';
+  }
+
+  const now = new Date();
+  const fmt = now.toLocaleString('es-AR', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' });
+  document.getElementById('last-update').innerHTML = `<i class="ti ti-refresh"></i> ${fmt}`;
+  document.getElementById('footer-date').textContent = fmt;
+
+  const [kpi, avail, dist, inv, proj, sec, obj, riesgos, opor] = await Promise.all([
+    getData('kpi_mesa'),
+    getData('disponibilidad'),
+    getData('distribucion'),
+    getData('inventario'),
+    getData('proyectos'),
+    getData('seguridad'),
+    getData('objetivos'),
+    getData('riesgos'),
+    getData('oportunidades'),
+  ]);
+
+  renderKPI(kpi);
+  renderAvail(avail);
+  renderDist(dist);
+  renderInv(inv);
+  renderProj(proj);
+  renderSec(sec);
+  renderObj(obj);
+  renderTags(riesgos, 'risk-tags', 'risk-tag');
+  renderTags(opor, 'op-tags', 'op-tag');
+}
+
+init();
+</script>
+</body>
+</html>
